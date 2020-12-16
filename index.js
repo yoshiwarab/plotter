@@ -3,19 +3,15 @@ import { vec2 } from 'gl-matrix'
 
 const width = 1000
 const height = 1000
-const numCircles = 300
-const minRadius = 5
-const maxRadius = 50
+const numCircles = 1000
+const minRadius = 3
+const maxRadius = 20
 
 svg5.createSVG(width, height)
 svg5.background(255)
 svg5.fill(255)
 svg5.stroke(0)
-// for (let i = 0; i < 10; i++) {
-//   svg5.circle(i * 50 + 25, 250, 50)
-// }
-// svg5.circle(25, 250, 50)
-// svg5.circle(50, 250, 25)
+
 const circles = packCircles(numCircles, width, height, minRadius, maxRadius)
 circles.forEach((circle) => circle.draw())
 render()
@@ -76,16 +72,23 @@ function Circle(x, y, r, id) {
 
   Circle.prototype.draw = function () {
     svg5.circle(this.x, this.y, this.r * 2)
-    svg5.push();
-    let newR = r
-    while (newR > 3) {
-      newR = newR - (this.r * 0.2)
-      svg5.circle(this.x, this.y, newR * 2)
+    
+    let newR = this.r
+
+    let angle
+    if (this.lookAt) {
+      angle = Math.atan2(this.lookAt.y - this.y, this.lookAt.x - this.x)
     }
-    // let angle = 0;
-    // if (this.lookAt) {
-    //   angle = p5.atan2(this.lookAt.y - this.y, this.lookAt.x - this.x);
-    // }
-    svg5.pop();
+
+    while (newR >= this.r * 0.2 ) {
+      newR = newR - (this.r * 0.2)
+      
+      const distance = (this.r - newR) / 2
+      let offset = [0, 0]
+      if (angle) {
+        offset = [distance * Math.cos(angle), distance * Math.sin(angle)]
+      }
+      svg5.circle(this.x + offset[0], this.y + offset[1], newR * 2)
+    }
   };
 }
