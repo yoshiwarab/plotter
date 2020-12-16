@@ -1,0 +1,10 @@
+{
+  "name": "plotter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "gl-matrix": "^3.3.0",
+    "svg5": "^0.1.3"
+  }
+}
